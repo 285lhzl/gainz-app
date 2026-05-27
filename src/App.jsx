@@ -1,32 +1,19 @@
 import { useState, useEffect } from "react";
 
-// ── FONTS (loaded via @import in style tag) ───────────────────────────────────
 const fontStyle = `
   @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap');
 `;
 
-// ── COLORS ────────────────────────────────────────────────────────────────────
 const C = {
-  bg:       "#fdf6f0",
-  cream:    "#fff9f5",
-  card:     "#ffffff",
-  border:   "#f0e4d8",
-  border2:  "#e8d5c4",
-  accent:   "#e8829a",   // rose
-  accentDim:"#e8829a18",
-  peach:    "#f4a57a",
-  peachDim: "#f4a57a18",
-  sage:     "#8db89a",
-  sageDim:  "#8db89a18",
-  lavender: "#c4a8d4",
-  lavDim:   "#c4a8d418",
-  text:     "#3d2e28",
-  sub:      "#9a7e74",
-  muted:    "#c4a99e",
-  warm:     "#f7ede4",
+  bg:"#fdf6f0", cream:"#fff9f5", card:"#ffffff",
+  border:"#f0e4d8", border2:"#e8d5c4",
+  accent:"#e8829a", accentDim:"#e8829a18",
+  peach:"#f4a57a", peachDim:"#f4a57a18",
+  sage:"#8db89a", sageDim:"#8db89a18",
+  lavender:"#c4a8d4", lavDim:"#c4a8d418",
+  text:"#3d2e28", sub:"#9a7e74", muted:"#c4a99e", warm:"#f7ede4",
 };
 
-// ── DATA ──────────────────────────────────────────────────────────────────────
 const MEAL_DB = [
   { id:"f01", cat:"Frühstück", icon:"🍓", name:"Magerquark-Bowl mit Beeren", detail:"300g Magerquark + 100g TK-Beeren + 50g Haferflocken + Honig" },
   { id:"f02", cat:"Frühstück", icon:"🥭", name:"Overnight Oats mit Mango", detail:"60g Haferflocken + 200g Magerquark + 100g TK-Mango + Vanille" },
@@ -108,15 +95,56 @@ const WORKOUTS = [
   { id:"w04", name:"Schultern & Bauch 🙆", muscles:"Schultern · Bauch", exIds:["e16","e17","e18","e23","e24","e25"] },
 ];
 
-// ── STORAGE ───────────────────────────────────────────────────────────────────
 const SK = { weight:"gainz_weight", food:"gainz_food", workout:"gainz_workout", inspo:"gainz_inspo", mealdb:"gainz_mealdb" };
 function load(k,d){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch{ return d; } }
 function save(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch{} }
 function todayKey(){ return new Date().toISOString().split("T")[0]; }
-function fmtDate(iso){ return new Date(iso+"T12:00:00").toLocaleDateString("de-DE",{day:"2-digit",month:"short"}); }
+function fmtDate(iso){ return new Date(iso+"T12:00:00").toLocaleDateString("de-DE",{weekday:"short",day:"2-digit",month:"short"}); }
+function fmtDateShort(iso){ return new Date(iso+"T12:00:00").toLocaleDateString("de-DE",{day:"2-digit",month:"short"}); }
 function fmtTime(iso){ return new Date(iso).toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"}); }
 
-// ── SMALL COMPONENTS ─────────────────────────────────────────────────────────
+// ── streak berechnen ──
+function calcStreak(foodLog) {
+  const today = todayKey();
+  let streak = 0;
+  let d = new Date();
+  while (true) {
+    const key = d.toISOString().split("T")[0];
+    if ((foodLog[key]||[]).length > 0) {
+      streak++;
+      d.setDate(d.getDate()-1);
+    } else {
+      // erlaubt heute noch keinen Eintrag zu haben ohne streak zu brechen
+      if (key === today) { d.setDate(d.getDate()-1); continue; }
+      break;
+    }
+    if (streak > 365) break;
+  }
+  return streak;
+}
+
+// ── top meals ──
+function getTopMeals(foodLog, n=5) {
+  const counts = {};
+  Object.values(foodLog).flat().forEach(e => {
+    counts[e.mealName] = (counts[e.mealName]||0) + 1;
+  });
+  return Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,n);
+}
+
+// ── kalender: letzte 4 Wochen ──
+function getCalendarDays(foodLog) {
+  const days = [];
+  const today = new Date();
+  for (let i=27; i>=0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate()-i);
+    const key = d.toISOString().split("T")[0];
+    days.push({ key, count: (foodLog[key]||[]).length, isToday: i===0 });
+  }
+  return days;
+}
+
 const Pill = ({children, active, color, onClick}) => (
   <button onClick={onClick} style={{
     flexShrink:0, padding:"6px 14px",
@@ -124,8 +152,7 @@ const Pill = ({children, active, color, onClick}) => (
     color: active ? "#fff" : C.sub,
     border: `1.5px solid ${active ? (color||C.accent) : C.border}`,
     borderRadius:20, fontFamily:"'DM Sans',sans-serif",
-    fontWeight:500, fontSize:12, cursor:"pointer", transition:"all 0.15s",
-    whiteSpace:"nowrap",
+    fontWeight:500, fontSize:12, cursor:"pointer", transition:"all 0.15s", whiteSpace:"nowrap",
   }}>{children}</button>
 );
 
@@ -137,9 +164,9 @@ const Card = ({children, style={}}) => (
   </div>
 );
 
-const SectionLabel = ({children}) => (
+const SectionLabel = ({children, style={}}) => (
   <div style={{ fontFamily:"'Fraunces',serif", fontSize:11, color:C.muted,
-    letterSpacing:"0.12em", textTransform:"uppercase", marginBottom:12 }}>
+    letterSpacing:"0.12em", textTransform:"uppercase", marginBottom:12, ...style }}>
     {children}
   </div>
 );
@@ -181,15 +208,12 @@ const Btn = ({children, onClick, variant="primary", style={}}) => {
   );
 };
 
-// ── MAIN APP ──────────────────────────────────────────────────────────────────
 export default function App() {
   const [page, setPage] = useState("home");
 
-  // weight
   const [weightLog, setWeightLog] = useState(() => load(SK.weight, []));
   const [wInput, setWInput] = useState("");
 
-  // food
   const [mealDb, setMealDb] = useState(() => load(SK.mealdb, MEAL_DB));
   const [foodLog, setFoodLog] = useState(() => load(SK.food, {}));
   const [pickCat, setPickCat] = useState("Frühstück");
@@ -198,14 +222,14 @@ export default function App() {
   const [logTime, setLogTime] = useState(() => new Date().toTimeString().slice(0,5));
   const [newMeal, setNewMeal] = useState({cat:"Frühstück",icon:"🍽️",name:"",detail:""});
   const [showAddMeal, setShowAddMeal] = useState(false);
+  const [essenTab, setEssenTab] = useState("loggen");
+  const [expandedDay, setExpandedDay] = useState(null);
 
-  // workout
   const [wLog, setWLog] = useState(() => load(SK.workout, {}));
   const [activeSession, setActiveSession] = useState(null);
   const [sessionNote, setSessionNote] = useState("");
   const [workoutTab, setWorkoutTab] = useState("plans");
 
-  // inspo
   const [inspo, setInspo] = useState(() => load(SK.inspo, []));
   const [newInspo, setNewInspo] = useState({name:"",quote:""});
   const [showAddInspo, setShowAddInspo] = useState(false);
@@ -220,7 +244,6 @@ export default function App() {
 
   function showToast(msg) { setToast(msg); setTimeout(()=>setToast(null),2400); }
 
-  // ── weight ──
   function addWeight() {
     const v = parseFloat(wInput.replace(",","."));
     if (isNaN(v)||v<30||v>300) return;
@@ -232,7 +255,6 @@ export default function App() {
     setWInput(""); showToast("✓ Gewicht gespeichert!");
   }
 
-  // ── food ──
   function logMeal() {
     if (!pickMeal) return;
     const base = new Date();
@@ -252,7 +274,6 @@ export default function App() {
     setShowAddMeal(false); showToast("✓ Mahlzeit hinzugefügt!");
   }
 
-  // ── workout ──
   function startWorkout(w) {
     const sets={};
     w.exIds.forEach(id=>{ sets[id]=[{reps:"",weight:"",done:false}]; });
@@ -289,7 +310,6 @@ export default function App() {
     showToast("🔥 Training abgeschlossen — du bist stark!");
   }
 
-  // derived
   const sortedW = [...weightLog].sort((a,b)=>a.date.localeCompare(b.date));
   const latestW = sortedW[sortedW.length-1];
   const firstW = sortedW[0];
@@ -297,7 +317,16 @@ export default function App() {
   const todayFood = foodLog[todayKey()]||[];
   const todayWorkout = wLog[todayKey()]||[];
 
-  // chart
+  // verlauf daten
+  const streak = calcStreak(foodLog);
+  const topMeals = getTopMeals(foodLog);
+  const calDays = getCalendarDays(foodLog);
+  const verlaufDays = Object.keys(foodLog)
+    .filter(k=>(foodLog[k]||[]).length>0)
+    .sort((a,b)=>b.localeCompare(a))
+    .slice(0,30);
+  const totalLoggedDays = Object.keys(foodLog).filter(k=>(foodLog[k]||[]).length>0).length;
+
   const chartW=320, chartH=100, padL=36, padR=12, padT=12, padB=28;
   const iW=chartW-padL-padR, iH=chartH-padT-padB;
   const ws=sortedW.map(e=>e.weight);
@@ -306,7 +335,6 @@ export default function App() {
   const toY=w=>padT+iH-((w-minW)/rng)*iH;
   const pts=sortedW.map((e,i)=>`${toX(i)},${toY(e.weight)}`).join(" ");
 
-  // nav items
   const NAV = [
     {id:"home",   label:"Home",    icon:"🌸"},
     {id:"essen",  label:"Essen",   icon:"🍑"},
@@ -318,10 +346,8 @@ export default function App() {
   return (
     <div style={{ minHeight:"100vh", background:C.bg, color:C.text,
       fontFamily:"'DM Sans','Helvetica Neue',sans-serif", paddingBottom:80 }}>
-
       <style>{fontStyle}</style>
 
-      {/* Toast */}
       {toast && (
         <div style={{ position:"fixed", top:20, left:"50%", transform:"translateX(-50%)",
           background:"#fff", border:`1.5px solid ${C.border}`, borderRadius:12,
@@ -332,7 +358,6 @@ export default function App() {
         </div>
       )}
 
-      {/* Header */}
       <div style={{ background:C.cream, borderBottom:`1.5px solid ${C.border}`,
         padding:"20px 18px 16px", textAlign:"center" }}>
         <div style={{ fontFamily:"'Fraunces',serif", fontSize:26, color:C.accent,
@@ -346,10 +371,9 @@ export default function App() {
 
       <div style={{ maxWidth:440, margin:"0 auto", padding:"16px 14px" }}>
 
-        {/* ── HOME ──────────────────────────────────────────────── */}
+        {/* ── HOME ── */}
         {page==="home" && (
           <>
-            {/* Quick stats */}
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:8, marginBottom:16 }}>
               {[
                 { label:"Gewicht", value: latestW ? `${latestW.weight} kg` : "—", sub: totalGain!==null ? `${parseFloat(totalGain)>=0?"+":""}${totalGain} kg` : "noch nichts", color:C.accent },
@@ -357,8 +381,7 @@ export default function App() {
                 { label:"Trainings", value: `${Object.keys(wLog).length}`, sub:"Tage", color:C.sage },
               ].map(s=>(
                 <div key={s.label} style={{ background:C.card, border:`1.5px solid ${C.border}`,
-                  borderRadius:14, padding:"12px 10px", textAlign:"center",
-                  boxShadow:"0 2px 8px #e8829a06" }}>
+                  borderRadius:14, padding:"12px 10px", textAlign:"center", boxShadow:"0 2px 8px #e8829a06" }}>
                   <div style={{ fontFamily:"'Fraunces',serif", fontSize:20, color:s.color, fontWeight:600 }}>{s.value}</div>
                   <div style={{ fontSize:9, color:C.muted, marginTop:2, letterSpacing:"0.1em", textTransform:"uppercase" }}>{s.label}</div>
                   <div style={{ fontSize:10, color:C.sub, marginTop:1 }}>{s.sub}</div>
@@ -366,7 +389,19 @@ export default function App() {
               ))}
             </div>
 
-            {/* Today food quick */}
+            {/* Streak */}
+            {streak > 0 && (
+              <Card style={{background:"linear-gradient(135deg,#fff5f0,#fdf0f5)",border:`1.5px solid ${C.peach}33`,marginBottom:10}}>
+                <div style={{display:"flex",alignItems:"center",gap:12}}>
+                  <div style={{fontSize:32}}>🔥</div>
+                  <div>
+                    <div style={{fontFamily:"'Fraunces',serif",fontSize:18,color:C.peach,fontWeight:600}}>{streak} {streak===1?"Tag":"Tage"} in Folge</div>
+                    <div style={{fontSize:11,color:C.sub,marginTop:2}}>du loggst regelmäßig — weiter so!</div>
+                  </div>
+                </div>
+              </Card>
+            )}
+
             <Card>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:10 }}>
                 <div style={{ fontFamily:"'Fraunces',serif", fontSize:15, color:C.text }}>Heute gegessen</div>
@@ -375,8 +410,7 @@ export default function App() {
               {todayFood.length===0
                 ? <div style={{fontSize:12,color:C.muted,textAlign:"center",padding:"10px 0"}}>Noch nichts geloggt 🌸</div>
                 : todayFood.map(e=>(
-                  <div key={e.id} style={{display:"flex",gap:8,alignItems:"center",padding:"5px 0",
-                    borderBottom:`1px solid ${C.border}22`}}>
+                  <div key={e.id} style={{display:"flex",gap:8,alignItems:"center",padding:"5px 0",borderBottom:`1px solid ${C.border}22`}}>
                     <span style={{fontSize:16}}>{e.mealIcon}</span>
                     <div style={{flex:1}}>
                       <div style={{fontSize:12,color:C.text}}>{e.mealName}</div>
@@ -387,7 +421,6 @@ export default function App() {
               }
             </Card>
 
-            {/* Today workout */}
             <Card>
               <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:8 }}>
                 <div style={{ fontFamily:"'Fraunces',serif", fontSize:15, color:C.text }}>Heute trainiert</div>
@@ -395,15 +428,10 @@ export default function App() {
               </div>
               {todayWorkout.length===0
                 ? <div style={{fontSize:12,color:C.muted,textAlign:"center",padding:"10px 0"}}>Noch kein Training heute 💪</div>
-                : todayWorkout.map(e=>(
-                  <div key={e.id} style={{fontSize:12,color:C.text,padding:"4px 0"}}>
-                    ✓ {e.workoutName}
-                  </div>
-                ))
+                : todayWorkout.map(e=>(<div key={e.id} style={{fontSize:12,color:C.text,padding:"4px 0"}}>✓ {e.workoutName}</div>))
               }
             </Card>
 
-            {/* Inspo teaser */}
             {inspo.length>0 && (
               <Card style={{background:`linear-gradient(135deg,#fff5f7,#fdf0f8)`,border:`1.5px solid ${C.accent}22`}}>
                 <div style={{fontSize:10,color:C.accent,letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:8,fontFamily:"'Fraunces',serif"}}>✨ Dein Vorbild</div>
@@ -414,116 +442,286 @@ export default function App() {
           </>
         )}
 
-        {/* ── ESSEN ─────────────────────────────────────────────── */}
+        {/* ── ESSEN ── */}
         {page==="essen" && (
           <>
-            <SectionLabel>Was hast du gegessen?</SectionLabel>
-
-            {/* Cat pills */}
-            <div style={{display:"flex",gap:6,marginBottom:14,overflowX:"auto",paddingBottom:4}}>
-              {MEAL_CATS.map(cat=>(
-                <Pill key={cat} active={pickCat===cat} onClick={()=>{setPickCat(cat);setPickMeal(null);}}>
-                  {MEAL_CAT_ICONS[cat]} {cat}
-                </Pill>
+            {/* Sub-tabs */}
+            <div style={{display:"flex",gap:6,marginBottom:16,overflowX:"auto",paddingBottom:2}}>
+              {[["loggen","Loggen"],["verlauf","Verlauf"],["stats","Stats"]].map(([k,l])=>(
+                <Pill key={k} active={essenTab===k} onClick={()=>setEssenTab(k)}>{l}</Pill>
               ))}
             </div>
 
-            {/* Meal list */}
-            <div style={{display:"flex",flexDirection:"column",gap:7,marginBottom:14}}>
-              {mealDb.filter(m=>m.cat===pickCat).map(meal=>{
-                const sel=pickMeal?.id===meal.id;
-                return (
-                  <button key={meal.id} onClick={()=>setPickMeal(sel?null:meal)} style={{
-                    background:sel?`linear-gradient(135deg,#fff0f4,#fdf5f8)`:C.card,
-                    border:`1.5px solid ${sel?C.accent:C.border}`,
-                    borderRadius:14,padding:"12px 14px",cursor:"pointer",textAlign:"left",
-                    transition:"all 0.15s",boxShadow:sel?`0 2px 12px ${C.accent}22`:"none",
-                  }}>
-                    <div style={{display:"flex",gap:10,alignItems:"center"}}>
-                      <span style={{fontSize:22,flexShrink:0}}>{meal.icon}</span>
-                      <div style={{flex:1}}>
-                        <div style={{fontSize:13,fontWeight:500,color:sel?C.accent:C.text}}>{meal.name}</div>
-                        {meal.detail&&<div style={{fontSize:11,color:C.muted,marginTop:2,lineHeight:1.5}}>{meal.detail}</div>}
-                      </div>
-                      {sel&&<span style={{color:C.accent,fontSize:16}}>✓</span>}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Log form */}
-            {pickMeal&&(
-              <Card style={{border:`1.5px solid ${C.accent}33`,background:"#fff8fa"}}>
-                <div style={{fontSize:13,fontWeight:500,color:C.accent,marginBottom:10}}>
-                  {pickMeal.icon} {pickMeal.name}
-                </div>
-                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
-                  <div>
-                    <div style={{fontSize:10,color:C.muted,marginBottom:4,letterSpacing:"0.08em"}}>UHRZEIT</div>
-                    <input type="time" value={logTime} onChange={e=>setLogTime(e.target.value)}
-                      style={{background:C.warm,border:`1.5px solid ${C.border}`,borderRadius:10,
-                        padding:"8px 10px",color:C.text,fontFamily:"inherit",fontSize:13,
-                        outline:"none",width:"100%",boxSizing:"border-box"}}/>
-                  </div>
-                  <div>
-                    <div style={{fontSize:10,color:C.muted,marginBottom:4,letterSpacing:"0.08em"}}>NOTIZ</div>
-                    <Inp placeholder="wie war's?" value={logNote} onChange={e=>setLogNote(e.target.value)}/>
-                  </div>
-                </div>
-                <Btn onClick={logMeal} style={{width:"100%"}}>Einloggen 🌸</Btn>
-              </Card>
-            )}
-
-            {/* Today's log */}
-            {todayFood.length>0&&(
+            {/* ── LOGGEN ── */}
+            {essenTab==="loggen" && (
               <>
-                <SectionLabel style={{marginTop:8}}>Heute geloggt</SectionLabel>
-                {[...todayFood].reverse().map(e=>(
-                  <div key={e.id} style={{display:"flex",gap:10,alignItems:"center",
-                    background:C.card,border:`1.5px solid ${C.sageDim}`,borderRadius:12,
-                    padding:"10px 12px",marginBottom:7}}>
-                    <span style={{fontSize:18}}>{e.mealIcon}</span>
-                    <div style={{flex:1}}>
-                      <div style={{fontSize:12,fontWeight:500,color:C.sage}}>{e.mealName}</div>
-                      {e.note&&<div style={{fontSize:11,color:C.muted}}>📝 {e.note}</div>}
-                      <div style={{fontSize:10,color:C.muted,marginTop:2}}>{fmtTime(e.ts)}</div>
+                <SectionLabel>Was hast du gegessen?</SectionLabel>
+                <div style={{display:"flex",gap:6,marginBottom:14,overflowX:"auto",paddingBottom:4}}>
+                  {MEAL_CATS.map(cat=>(
+                    <Pill key={cat} active={pickCat===cat} onClick={()=>{setPickCat(cat);setPickMeal(null);}}>
+                      {MEAL_CAT_ICONS[cat]} {cat}
+                    </Pill>
+                  ))}
+                </div>
+
+                <div style={{display:"flex",flexDirection:"column",gap:7,marginBottom:14}}>
+                  {mealDb.filter(m=>m.cat===pickCat).map(meal=>{
+                    const sel=pickMeal?.id===meal.id;
+                    return (
+                      <button key={meal.id} onClick={()=>setPickMeal(sel?null:meal)} style={{
+                        background:sel?`linear-gradient(135deg,#fff0f4,#fdf5f8)`:C.card,
+                        border:`1.5px solid ${sel?C.accent:C.border}`,
+                        borderRadius:14,padding:"12px 14px",cursor:"pointer",textAlign:"left",
+                        transition:"all 0.15s",boxShadow:sel?`0 2px 12px ${C.accent}22`:"none",
+                      }}>
+                        <div style={{display:"flex",gap:10,alignItems:"center"}}>
+                          <span style={{fontSize:22,flexShrink:0}}>{meal.icon}</span>
+                          <div style={{flex:1}}>
+                            <div style={{fontSize:13,fontWeight:500,color:sel?C.accent:C.text}}>{meal.name}</div>
+                            {meal.detail&&<div style={{fontSize:11,color:C.muted,marginTop:2,lineHeight:1.5}}>{meal.detail}</div>}
+                          </div>
+                          {sel&&<span style={{color:C.accent,fontSize:16}}>✓</span>}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {pickMeal&&(
+                  <Card style={{border:`1.5px solid ${C.accent}33`,background:"#fff8fa"}}>
+                    <div style={{fontSize:13,fontWeight:500,color:C.accent,marginBottom:10}}>
+                      {pickMeal.icon} {pickMeal.name}
                     </div>
-                    <button onClick={()=>setFoodLog(prev=>({...prev,[todayKey()]:(prev[todayKey()]||[]).filter(x=>x.id!==e.id)}))}
-                      style={{background:"none",border:"none",cursor:"pointer",color:C.muted,padding:4,fontSize:16}}>×</button>
-                  </div>
-                ))}
+                    <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
+                      <div>
+                        <div style={{fontSize:10,color:C.muted,marginBottom:4,letterSpacing:"0.08em"}}>UHRZEIT</div>
+                        <input type="time" value={logTime} onChange={e=>setLogTime(e.target.value)}
+                          style={{background:C.warm,border:`1.5px solid ${C.border}`,borderRadius:10,
+                            padding:"8px 10px",color:C.text,fontFamily:"inherit",fontSize:13,
+                            outline:"none",width:"100%",boxSizing:"border-box"}}/>
+                      </div>
+                      <div>
+                        <div style={{fontSize:10,color:C.muted,marginBottom:4,letterSpacing:"0.08em"}}>NOTIZ</div>
+                        <Inp placeholder="wie war's?" value={logNote} onChange={e=>setLogNote(e.target.value)}/>
+                      </div>
+                    </div>
+                    <Btn onClick={logMeal} style={{width:"100%"}}>Einloggen 🌸</Btn>
+                  </Card>
+                )}
+
+                {todayFood.length>0&&(
+                  <>
+                    <SectionLabel style={{marginTop:8}}>Heute geloggt</SectionLabel>
+                    {[...todayFood].reverse().map(e=>(
+                      <div key={e.id} style={{display:"flex",gap:10,alignItems:"center",
+                        background:C.card,border:`1.5px solid ${C.sageDim}`,borderRadius:12,
+                        padding:"10px 12px",marginBottom:7}}>
+                        <span style={{fontSize:18}}>{e.mealIcon}</span>
+                        <div style={{flex:1}}>
+                          <div style={{fontSize:12,fontWeight:500,color:C.sage}}>{e.mealName}</div>
+                          {e.note&&<div style={{fontSize:11,color:C.muted}}>📝 {e.note}</div>}
+                          <div style={{fontSize:10,color:C.muted,marginTop:2}}>{fmtTime(e.ts)}</div>
+                        </div>
+                        <button onClick={()=>setFoodLog(prev=>({...prev,[todayKey()]:(prev[todayKey()]||[]).filter(x=>x.id!==e.id)}))}
+                          style={{background:"none",border:"none",cursor:"pointer",color:C.muted,padding:4,fontSize:16}}>×</button>
+                      </div>
+                    ))}
+                  </>
+                )}
+
+                <div style={{marginTop:8}}>
+                  <Btn onClick={()=>setShowAddMeal(v=>!v)} variant="ghost" style={{width:"100%",marginBottom:8}}>
+                    + eigene Mahlzeit hinzufügen
+                  </Btn>
+                  {showAddMeal&&(
+                    <Card style={{border:`1.5px solid ${C.peach}44`}}>
+                      <div style={{display:"grid",gridTemplateColumns:"50px 1fr",gap:8,marginBottom:8}}>
+                        <Inp placeholder="🍽️" value={newMeal.icon} onChange={e=>setNewMeal(p=>({...p,icon:e.target.value}))} style={{textAlign:"center",fontSize:20,padding:"8px"}}/>
+                        <Inp placeholder="Name" value={newMeal.name} onChange={e=>setNewMeal(p=>({...p,name:e.target.value}))}/>
+                      </div>
+                      <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:8}}>
+                        {MEAL_CATS.map(cat=>(
+                          <Pill key={cat} active={newMeal.cat===cat} color={C.peach} onClick={()=>setNewMeal(p=>({...p,cat}))}>{cat}</Pill>
+                        ))}
+                      </div>
+                      <Inp placeholder="Zutaten (optional)" value={newMeal.detail}
+                        onChange={e=>setNewMeal(p=>({...p,detail:e.target.value}))} style={{marginBottom:8}}/>
+                      <Btn onClick={addMealToDb} style={{width:"100%",background:C.peach}}>Speichern</Btn>
+                    </Card>
+                  )}
+                </div>
               </>
             )}
 
-            {/* Add custom meal */}
-            <div style={{marginTop:8}}>
-              <Btn onClick={()=>setShowAddMeal(v=>!v)} variant="ghost" style={{width:"100%",marginBottom:8}}>
-                + eigene Mahlzeit hinzufügen
-              </Btn>
-              {showAddMeal&&(
-                <Card style={{border:`1.5px solid ${C.peach}44`}}>
-                  <div style={{display:"grid",gridTemplateColumns:"50px 1fr",gap:8,marginBottom:8}}>
-                    <Inp placeholder="🍽️" value={newMeal.icon} onChange={e=>setNewMeal(p=>({...p,icon:e.target.value}))} style={{textAlign:"center",fontSize:20,padding:"8px"}}/>
-                    <Inp placeholder="Name" value={newMeal.name} onChange={e=>setNewMeal(p=>({...p,name:e.target.value}))}/>
+            {/* ── VERLAUF ── */}
+            {essenTab==="verlauf" && (
+              <>
+                {/* Kalender */}
+                <Card>
+                  <div style={{fontFamily:"'Fraunces',serif",fontSize:13,color:C.text,marginBottom:12}}>
+                    Letzte 4 Wochen
                   </div>
-                  <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:8}}>
-                    {MEAL_CATS.map(cat=>(
-                      <Pill key={cat} active={newMeal.cat===cat} color={C.peach} onClick={()=>setNewMeal(p=>({...p,cat}))} style={{fontSize:11}}>
-                        {cat}
-                      </Pill>
+                  <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:4}}>
+                    {["Mo","Di","Mi","Do","Fr","Sa","So"].map(d=>(
+                      <div key={d} style={{fontSize:8,color:C.muted,textAlign:"center",marginBottom:2}}>{d}</div>
+                    ))}
+                    {calDays.map(d=>(
+                      <div key={d.key} title={fmtDateShort(d.key)} style={{
+                        aspectRatio:"1", borderRadius:6,
+                        background: d.count>0 ? C.accent : C.warm,
+                        border: d.isToday ? `2px solid ${C.accent}` : `1px solid ${C.border}`,
+                        opacity: d.count>0 ? 1 : 0.5,
+                        cursor:"default",
+                      }}/>
                     ))}
                   </div>
-                  <Inp placeholder="Zutaten (optional)" value={newMeal.detail}
-                    onChange={e=>setNewMeal(p=>({...p,detail:e.target.value}))} style={{marginBottom:8}}/>
-                  <Btn onClick={addMealToDb} style={{width:"100%",background:C.peach}}>Speichern</Btn>
+                  <div style={{display:"flex",alignItems:"center",gap:8,marginTop:10}}>
+                    <div style={{width:10,height:10,borderRadius:3,background:C.accent}}/>
+                    <span style={{fontSize:10,color:C.muted}}>geloggt</span>
+                    <div style={{width:10,height:10,borderRadius:3,background:C.warm,border:`1px solid ${C.border}`}}/>
+                    <span style={{fontSize:10,color:C.muted}}>nicht geloggt</span>
+                  </div>
                 </Card>
-              )}
-            </div>
+
+                {/* Tages-Verlauf */}
+                <SectionLabel>Tage im Detail</SectionLabel>
+                {verlaufDays.length===0 && (
+                  <div style={{textAlign:"center",color:C.muted,padding:"30px 0",fontSize:13}}>
+                    Noch nichts geloggt 🌸
+                  </div>
+                )}
+                {verlaufDays.map(dateKey => {
+                  const entries = foodLog[dateKey]||[];
+                  const isToday = dateKey===todayKey();
+                  const isExpanded = expandedDay===dateKey;
+                  return (
+                    <div key={dateKey} style={{marginBottom:8}}>
+                      <button onClick={()=>setExpandedDay(isExpanded?null:dateKey)} style={{
+                        width:"100%", background:C.card,
+                        border:`1.5px solid ${isToday?C.accent+"44":C.border}`,
+                        borderRadius:12, padding:"12px 14px", cursor:"pointer",
+                        textAlign:"left", display:"flex", justifyContent:"space-between", alignItems:"center",
+                      }}>
+                        <div>
+                          <div style={{fontFamily:"'Fraunces',serif",fontSize:13,
+                            color:isToday?C.accent:C.text}}>
+                            {isToday?"Heute":fmtDate(dateKey)}
+                          </div>
+                          <div style={{fontSize:11,color:C.muted,marginTop:2}}>
+                            {entries.length} Mahlzeit{entries.length!==1?"en":""}
+                            {" · "}{entries.map(e=>e.mealIcon).join(" ")}
+                          </div>
+                        </div>
+                        <span style={{fontSize:14,color:C.muted}}>{isExpanded?"▲":"▼"}</span>
+                      </button>
+                      {isExpanded && (
+                        <div style={{background:C.warm,borderRadius:"0 0 12px 12px",
+                          border:`1.5px solid ${C.border}`,borderTop:"none",
+                          padding:"8px 14px 12px"}}>
+                          {entries.map(e=>(
+                            <div key={e.id} style={{display:"flex",gap:10,alignItems:"flex-start",
+                              padding:"8px 0",borderBottom:`1px solid ${C.border}44`}}>
+                              <span style={{fontSize:18,flexShrink:0}}>{e.mealIcon}</span>
+                              <div style={{flex:1}}>
+                                <div style={{fontSize:12,fontWeight:500,color:C.text}}>{e.mealName}</div>
+                                {e.note&&<div style={{fontSize:11,color:C.sub,marginTop:1}}>📝 {e.note}</div>}
+                                <div style={{fontSize:10,color:C.muted,marginTop:1}}>{fmtTime(e.ts)}</div>
+                              </div>
+                              <div style={{fontSize:10,color:C.muted,
+                                background:C.card,borderRadius:6,padding:"2px 6px",
+                                border:`1px solid ${C.border}`,flexShrink:0}}>
+                                {e.cat}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </>
+            )}
+
+            {/* ── STATS ── */}
+            {essenTab==="stats" && (
+              <>
+                {/* Streak + gesamt */}
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:14}}>
+                  <Card style={{textAlign:"center",marginBottom:0}}>
+                    <div style={{fontSize:28}}>🔥</div>
+                    <div style={{fontFamily:"'Fraunces',serif",fontSize:22,color:C.peach,fontWeight:600}}>{streak}</div>
+                    <div style={{fontSize:10,color:C.muted,letterSpacing:"0.1em"}}>TAGE STREAK</div>
+                  </Card>
+                  <Card style={{textAlign:"center",marginBottom:0}}>
+                    <div style={{fontSize:28}}>📅</div>
+                    <div style={{fontFamily:"'Fraunces',serif",fontSize:22,color:C.accent,fontWeight:600}}>{totalLoggedDays}</div>
+                    <div style={{fontSize:10,color:C.muted,letterSpacing:"0.1em"}}>TAGE GELOGGT</div>
+                  </Card>
+                </div>
+
+                {/* Top Mahlzeiten */}
+                <Card>
+                  <div style={{fontFamily:"'Fraunces',serif",fontSize:14,color:C.text,marginBottom:12}}>
+                    🏆 Deine Lieblingsmahlzeiten
+                  </div>
+                  {topMeals.length===0 && (
+                    <div style={{fontSize:12,color:C.muted,textAlign:"center",padding:"10px 0"}}>
+                      Noch keine Daten 🌸
+                    </div>
+                  )}
+                  {topMeals.map(([name, count], i)=>{
+                    const meal = mealDb.find(m=>m.name===name);
+                    const maxCount = topMeals[0]?.[1]||1;
+                    return (
+                      <div key={name} style={{marginBottom:10}}>
+                        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:4}}>
+                          <div style={{display:"flex",gap:8,alignItems:"center"}}>
+                            <span style={{fontSize:16}}>{meal?.icon||"🍽️"}</span>
+                            <span style={{fontSize:12,color:C.text}}>{name}</span>
+                          </div>
+                          <span style={{fontSize:11,color:C.muted}}>{count}×</span>
+                        </div>
+                        <div style={{height:5,background:C.warm,borderRadius:4,overflow:"hidden"}}>
+                          <div style={{height:"100%",width:`${(count/maxCount)*100}%`,
+                            background:`linear-gradient(90deg,${C.accent},${C.peach})`,
+                            borderRadius:4,transition:"width 0.4s ease"}}/>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </Card>
+
+                {/* Mahlzeiten pro Kategorie */}
+                <Card>
+                  <div style={{fontFamily:"'Fraunces',serif",fontSize:14,color:C.text,marginBottom:12}}>
+                    📊 Nach Kategorie
+                  </div>
+                  {MEAL_CATS.map(cat=>{
+                    const count = Object.values(foodLog).flat().filter(e=>e.cat===cat).length;
+                    const total = Object.values(foodLog).flat().length||1;
+                    return (
+                      <div key={cat} style={{display:"flex",alignItems:"center",gap:10,marginBottom:10}}>
+                        <span style={{fontSize:14,width:20}}>{MEAL_CAT_ICONS[cat]}</span>
+                        <div style={{flex:1}}>
+                          <div style={{display:"flex",justifyContent:"space-between",marginBottom:3}}>
+                            <span style={{fontSize:11,color:C.text}}>{cat}</span>
+                            <span style={{fontSize:11,color:C.muted}}>{count}×</span>
+                          </div>
+                          <div style={{height:5,background:C.warm,borderRadius:4,overflow:"hidden"}}>
+                            <div style={{height:"100%",width:`${(count/total)*100}%`,
+                              background:C.sage,borderRadius:4}}/>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </Card>
+              </>
+            )}
           </>
         )}
 
-        {/* ── WORKOUT ───────────────────────────────────────────── */}
+        {/* ── WORKOUT ── */}
         {page==="workout" && (
           <>
             <div style={{display:"flex",gap:6,marginBottom:16}}>
@@ -565,7 +763,7 @@ export default function App() {
               <>
                 {!activeSession
                   ?<div style={{textAlign:"center",color:C.muted,padding:"40px 0",fontSize:13}}>
-                    Kein aktives Training —{"\n"}starte einen Plan! 💪
+                    Kein aktives Training — starte einen Plan! 💪
                   </div>
                   :<>
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
@@ -638,8 +836,7 @@ export default function App() {
                   const isToday=dateKey===todayKey();
                   return (
                     <div key={dateKey} style={{marginBottom:14}}>
-                      <div style={{fontSize:11,color:isToday?C.accent:C.muted,
-                        fontFamily:"'Fraunces',serif",marginBottom:8}}>
+                      <div style={{fontSize:11,color:isToday?C.accent:C.muted,fontFamily:"'Fraunces',serif",marginBottom:8}}>
                         {isToday?"Heute":fmtDate(dateKey)}
                       </div>
                       {entries.map(e=>{
@@ -663,25 +860,22 @@ export default function App() {
           </>
         )}
 
-        {/* ── GEWICHT ───────────────────────────────────────────── */}
+        {/* ── GEWICHT ── */}
         {page==="gewicht" && (
           <>
-            {/* Stats */}
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8,marginBottom:16}}>
               {[
                 {label:"Aktuell", value:latestW?`${latestW.weight} kg`:"—", color:C.accent},
                 {label:"Gesamt", value:totalGain!==null?`${parseFloat(totalGain)>=0?"+":""}${totalGain} kg`:"—", color:C.peach},
                 {label:"Einträge", value:sortedW.length, color:C.sage},
               ].map(s=>(
-                <div key={s.label} style={{background:C.card,border:`1.5px solid ${C.border}`,
-                  borderRadius:14,padding:"12px 10px",textAlign:"center"}}>
+                <div key={s.label} style={{background:C.card,border:`1.5px solid ${C.border}`,borderRadius:14,padding:"12px 10px",textAlign:"center"}}>
                   <div style={{fontFamily:"'Fraunces',serif",fontSize:20,color:s.color,fontWeight:600}}>{s.value}</div>
                   <div style={{fontSize:9,color:C.muted,marginTop:2,letterSpacing:"0.1em",textTransform:"uppercase"}}>{s.label}</div>
                 </div>
               ))}
             </div>
 
-            {/* Input */}
             <Card>
               <div style={{fontSize:11,color:C.muted,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:10,fontFamily:"'Fraunces',serif"}}>Heute eintragen</div>
               <div style={{display:"flex",gap:8}}>
@@ -692,7 +886,6 @@ export default function App() {
               </div>
             </Card>
 
-            {/* Chart */}
             {sortedW.length>1&&(
               <Card>
                 <div style={{fontSize:11,color:C.muted,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:10,fontFamily:"'Fraunces',serif"}}>Verlauf</div>
@@ -708,30 +901,24 @@ export default function App() {
                     </linearGradient>
                   </defs>
                   {sortedW.length>1&&(
-                    <polygon
-                      points={`${toX(0)},${padT+iH} ${pts} ${toX(sortedW.length-1)},${padT+iH}`}
-                      fill="url(#wgrad)"/>
+                    <polygon points={`${toX(0)},${padT+iH} ${pts} ${toX(sortedW.length-1)},${padT+iH}`} fill="url(#wgrad)"/>
                   )}
                   {sortedW.length>1&&(
-                    <polyline points={pts} fill="none" stroke={C.accent} strokeWidth={2.5}
-                      strokeLinejoin="round" strokeLinecap="round"/>
+                    <polyline points={pts} fill="none" stroke={C.accent} strokeWidth={2.5} strokeLinejoin="round" strokeLinecap="round"/>
                   )}
                   {sortedW.map((e,i)=>(
-                    <circle key={e.date} cx={toX(i)} cy={toY(e.weight)} r={4}
-                      fill={C.accent} stroke="#fff" strokeWidth={2}/>
+                    <circle key={e.date} cx={toX(i)} cy={toY(e.weight)} r={4} fill={C.accent} stroke="#fff" strokeWidth={2}/>
                   ))}
                 </svg>
               </Card>
             )}
 
-            {/* Log list */}
             <SectionLabel>Alle Einträge</SectionLabel>
             {sortedW.length===0&&<div style={{textAlign:"center",color:C.muted,padding:"20px 0",fontSize:13}}>Noch keine Einträge</div>}
             {[...sortedW].reverse().map(e=>(
               <div key={e.date} style={{display:"flex",justifyContent:"space-between",alignItems:"center",
-                background:C.card,border:`1.5px solid ${C.border}`,borderRadius:12,
-                padding:"11px 14px",marginBottom:7}}>
-                <div style={{fontSize:11,color:C.muted}}>{fmtDate(e.date)}</div>
+                background:C.card,border:`1.5px solid ${C.border}`,borderRadius:12,padding:"11px 14px",marginBottom:7}}>
+                <div style={{fontSize:11,color:C.muted}}>{fmtDateShort(e.date)}</div>
                 <div style={{fontFamily:"'Fraunces',serif",fontSize:18,color:C.accent,fontWeight:600}}>{e.weight} kg</div>
                 <button onClick={()=>setWeightLog(prev=>prev.filter(x=>x.date!==e.date))}
                   style={{background:"none",border:"none",cursor:"pointer",color:C.muted,fontSize:16,padding:4}}>×</button>
@@ -740,7 +927,7 @@ export default function App() {
           </>
         )}
 
-        {/* ── INSPO ─────────────────────────────────────────────── */}
+        {/* ── INSPO ── */}
         {page==="inspo" && (
           <>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
@@ -779,11 +966,9 @@ export default function App() {
                 boxShadow:`0 4px 20px ${C.accent}0a`}}>
                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
                   <div style={{flex:1}}>
-                    <div style={{fontFamily:"'Fraunces',serif",fontSize:17,color:C.accent,
-                      fontStyle:"italic",marginBottom:8}}>✦ {p.name}</div>
+                    <div style={{fontFamily:"'Fraunces',serif",fontSize:17,color:C.accent,fontStyle:"italic",marginBottom:8}}>✦ {p.name}</div>
                     {p.quote&&(
-                      <div style={{fontSize:13,color:C.sub,lineHeight:1.7,
-                        borderLeft:`2px solid ${C.accent}44`,paddingLeft:12,fontStyle:"italic"}}>
+                      <div style={{fontSize:13,color:C.sub,lineHeight:1.7,borderLeft:`2px solid ${C.accent}44`,paddingLeft:12,fontStyle:"italic"}}>
                         „{p.quote}"
                       </div>
                     )}
@@ -797,10 +982,8 @@ export default function App() {
         )}
       </div>
 
-      {/* Bottom Nav */}
       <div style={{position:"fixed",bottom:0,left:0,right:0,background:C.cream,
-        borderTop:`1.5px solid ${C.border}`,display:"flex",
-        boxShadow:"0 -4px 20px #e8829a0a"}}>
+        borderTop:`1.5px solid ${C.border}`,display:"flex",boxShadow:"0 -4px 20px #e8829a0a"}}>
         {NAV.map(n=>(
           <button key={n.id} onClick={()=>setPage(n.id)} style={{
             flex:1,padding:"10px 4px 12px",background:"transparent",border:"none",
@@ -809,12 +992,10 @@ export default function App() {
             transition:"all 0.15s",
           }}>
             <div style={{fontSize:18,marginBottom:2}}>{n.icon}</div>
-            <div style={{fontSize:9,fontFamily:"'DM Sans',sans-serif",
-              fontWeight:500,letterSpacing:"0.05em"}}>{n.label}</div>
+            <div style={{fontSize:9,fontFamily:"'DM Sans',sans-serif",fontWeight:500,letterSpacing:"0.05em"}}>{n.label}</div>
           </button>
         ))}
       </div>
     </div>
   );
 }
-
