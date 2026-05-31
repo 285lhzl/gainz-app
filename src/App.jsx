@@ -61,49 +61,53 @@ const MEAL_CATS = ["Frühstück","Snack","Mittagessen","Abendessen"];
 const MEAL_CAT_ICONS = { "Frühstück":"🌸", "Snack":"🍑", "Mittagessen":"🌿", "Abendessen":"🌙" };
 
 const EXERCISES = [
-  { id:"e01", muscle:"Beine", name:"Kniebeuge", tip:"Knie über Zehen, Rücken gerade" },
-  { id:"e02", muscle:"Beine", name:"Beinpresse", tip:"Füße schulterbreit, nicht durchstrecken" },
-  { id:"e03", muscle:"Beine", name:"Ausfallschritte", tip:"Knie berührt fast den Boden" },
-  { id:"e04", muscle:"Beine", name:"Beinbeuger (Maschine)", tip:"Langsam ablassen für mehr Reiz" },
-  { id:"e05", muscle:"Beine", name:"Beinstrecker (Maschine)", tip:"Oben kurz halten" },
-  { id:"e06", muscle:"Beine", name:"Hip Thrust", tip:"Bauch anspannen, Becken oben halten" },
-  { id:"e07", muscle:"Beine", name:"Wadenheben", tip:"Ganz oben kurz pausieren" },
-  { id:"e08", muscle:"Rücken", name:"Latzug", tip:"Schulterblätter zusammenziehen" },
-  { id:"e09", muscle:"Rücken", name:"Rudern (Kabelzug)", tip:"Ellbogen nah am Körper" },
-  { id:"e10", muscle:"Rücken", name:"Kurzhantel-Rudern", tip:"Rücken parallel zum Boden" },
-  { id:"e11", muscle:"Rücken", name:"Hyperextensions", tip:"Nicht überstrecken" },
-  { id:"e12", muscle:"Brust", name:"Bankdrücken", tip:"Schulterblätter zusammen" },
-  { id:"e13", muscle:"Brust", name:"Schrägbankdrücken", tip:"Obere Brust betonen" },
-  { id:"e14", muscle:"Brust", name:"Butterfly (Maschine)", tip:"Langsam öffnen, nicht reißen" },
-  { id:"e15", muscle:"Brust", name:"Kabelfliegende", tip:"Arme leicht gebeugt lassen" },
-  { id:"e16", muscle:"Schultern", name:"Schulterdrücken (KH)", tip:"Nicht ins Hohlkreuz fallen" },
-  { id:"e17", muscle:"Schultern", name:"Seitheben", tip:"Arme leicht gebeugt, kontrolliert" },
-  { id:"e18", muscle:"Schultern", name:"Face Pulls", tip:"Hintere Schulter stärken" },
-  { id:"e19", muscle:"Arme", name:"Bizepscurl (KH)", tip:"Ellbogen bleibt am Körper" },
-  { id:"e20", muscle:"Arme", name:"Trizepsdrücken (Kabel)", tip:"Ellbogen eng halten" },
-  { id:"e21", muscle:"Arme", name:"Hammercurl", tip:"Daumen zeigt nach oben" },
-  { id:"e22", muscle:"Arme", name:"Schädeldrucker", tip:"Ellbogen zeigen zur Decke" },
+  { id:"e01", muscle:"Booty", name:"Hip Thrust", tip:"Bauch anspannen, Becken oben halten, oben kurz halten" },
+  { id:"e02", muscle:"Booty", name:"Romanian Deadlift", tip:"Rücken gerade, Hüfte nach hinten schieben, Gewicht nah am Körper" },
+  { id:"e03", muscle:"Booty", name:"Glute Kickbacks (Kabel)", tip:"Hüfte stabil, nur das Bein bewegen, oben anspannen" },
+  { id:"e04", muscle:"Booty", name:"Abduktoren (Maschine)", tip:"Langsam zurück für mehr Reiz, aufrecht sitzen" },
+  { id:"e05", muscle:"Booty", name:"Ausfallschritte", tip:"Knie berührt fast den Boden, Oberkörper aufrecht" },
+  { id:"e06", muscle:"Beine", name:"Kniebeuge", tip:"Knie über Zehen, Rücken gerade" },
+  { id:"e07", muscle:"Beine", name:"Beinpresse", tip:"Füße schulterbreit, nicht durchstrecken" },
+  { id:"e08", muscle:"Beine", name:"Beinbeuger (Maschine)", tip:"Langsam ablassen für mehr Reiz" },
+  { id:"e09", muscle:"Beine", name:"Beinstrecker (Maschine)", tip:"Oben kurz halten" },
+  { id:"e10", muscle:"Rücken", name:"Latzug", tip:"Schulterblätter zusammenziehen" },
+  { id:"e11", muscle:"Rücken", name:"Rudern (Kabelzug)", tip:"Ellbogen nah am Körper" },
+  { id:"e12", muscle:"Rücken", name:"Kurzhantel-Rudern", tip:"Rücken parallel zum Boden" },
+  { id:"e13", muscle:"Rücken", name:"Hyperextensions", tip:"Nicht überstrecken, Gesäß anspannen" },
+  { id:"e14", muscle:"Brust", name:"Bankdrücken", tip:"Schulterblätter zusammen" },
+  { id:"e15", muscle:"Brust", name:"Schrägbankdrücken", tip:"Obere Brust betonen" },
+  { id:"e16", muscle:"Brust", name:"Butterfly (Maschine)", tip:"Langsam öffnen, nicht reißen" },
+  { id:"e17", muscle:"Schultern", name:"Schulterdrücken (KH)", tip:"Nicht ins Hohlkreuz fallen" },
+  { id:"e18", muscle:"Schultern", name:"Seitheben", tip:"Arme leicht gebeugt, kontrolliert" },
+  { id:"e19", muscle:"Schultern", name:"Face Pulls", tip:"Hintere Schulter stärken" },
+  { id:"e20", muscle:"Arme", name:"Bizepscurl (KH)", tip:"Ellbogen bleibt am Körper" },
+  { id:"e21", muscle:"Arme", name:"Trizepsdrücken (Kabel)", tip:"Ellbogen eng halten" },
+  { id:"e22", muscle:"Arme", name:"Hammercurl", tip:"Daumen zeigt nach oben" },
   { id:"e23", muscle:"Bauch", name:"Crunches", tip:"Nacken nicht ziehen" },
   { id:"e24", muscle:"Bauch", name:"Plank", tip:"Hüfte nicht hängen lassen" },
   { id:"e25", muscle:"Bauch", name:"Beinheben", tip:"Lendenwirbel bleibt am Boden" },
+  { id:"e26", muscle:"Bauch", name:"Russian Twists", tip:"Füße leicht anheben für mehr Intensität" },
 ];
 
 const WORKOUTS = [
-  { id:"w01", name:"Bein-Tag 🦵", muscles:"Beine", exIds:["e01","e02","e03","e04","e06","e07"] },
-  { id:"w02", name:"Rücken & Bizeps 💪", muscles:"Rücken · Arme", exIds:["e08","e09","e10","e11","e19","e21"] },
-  { id:"w03", name:"Brust & Trizeps 🏋️", muscles:"Brust · Arme", exIds:["e12","e13","e14","e15","e20","e22"] },
-  { id:"w04", name:"Schultern & Bauch 🙆", muscles:"Schultern · Bauch", exIds:["e16","e17","e18","e23","e24","e25"] },
+  { id:"w01", name:"Booty & Beine 🍑", muscles:"Booty · Beine", exIds:["e01","e02","e03","e04","e05","e08"] },
+  { id:"w02", name:"Rücken & Bizeps 💪", muscles:"Rücken · Arme", exIds:["e10","e11","e12","e13","e20","e22"] },
+  { id:"w03", name:"Brust & Trizeps 🏋️", muscles:"Brust · Arme", exIds:["e14","e15","e16","e21"] },
+  { id:"w04", name:"Schultern & Bauch 🙆", muscles:"Schultern · Bauch", exIds:["e17","e18","e19","e23","e24","e25","e26"] },
 ];
 
-const SK = { weight:"gainz_weight", food:"gainz_food", workout:"gainz_workout", inspo:"gainz_inspo", mealdb:"gainz_mealdb" };
+const SK = {
+  weight:"gainz_weight", food:"gainz_food", workout:"gainz_workout",
+  inspo:"gainz_inspo", mealdb:"gainz_mealdb", session:"gainz_active_session",
+};
 function load(k,d){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch{ return d; } }
 function save(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch{} }
+function del(k){ try{ localStorage.removeItem(k); }catch{} }
 function todayKey(){ return new Date().toISOString().split("T")[0]; }
 function fmtDate(iso){ return new Date(iso+"T12:00:00").toLocaleDateString("de-DE",{weekday:"short",day:"2-digit",month:"short"}); }
 function fmtDateShort(iso){ return new Date(iso+"T12:00:00").toLocaleDateString("de-DE",{day:"2-digit",month:"short"}); }
 function fmtTime(iso){ return new Date(iso).toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"}); }
 
-// ── streak berechnen ──
 function calcStreak(foodLog) {
   const today = todayKey();
   let streak = 0;
@@ -114,7 +118,6 @@ function calcStreak(foodLog) {
       streak++;
       d.setDate(d.getDate()-1);
     } else {
-      // erlaubt heute noch keinen Eintrag zu haben ohne streak zu brechen
       if (key === today) { d.setDate(d.getDate()-1); continue; }
       break;
     }
@@ -123,7 +126,6 @@ function calcStreak(foodLog) {
   return streak;
 }
 
-// ── top meals ──
 function getTopMeals(foodLog, n=5) {
   const counts = {};
   Object.values(foodLog).flat().forEach(e => {
@@ -132,7 +134,6 @@ function getTopMeals(foodLog, n=5) {
   return Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,n);
 }
 
-// ── kalender: letzte 4 Wochen ──
 function getCalendarDays(foodLog) {
   const days = [];
   const today = new Date();
@@ -210,10 +211,8 @@ const Btn = ({children, onClick, variant="primary", style={}}) => {
 
 export default function App() {
   const [page, setPage] = useState("home");
-
   const [weightLog, setWeightLog] = useState(() => load(SK.weight, []));
   const [wInput, setWInput] = useState("");
-
   const [mealDb, setMealDb] = useState(() => load(SK.mealdb, MEAL_DB));
   const [foodLog, setFoodLog] = useState(() => load(SK.food, {}));
   const [pickCat, setPickCat] = useState("Frühstück");
@@ -225,15 +224,15 @@ export default function App() {
   const [essenTab, setEssenTab] = useState("loggen");
   const [expandedDay, setExpandedDay] = useState(null);
 
+  // Session wird aus localStorage wiederhergestellt!
   const [wLog, setWLog] = useState(() => load(SK.workout, {}));
-  const [activeSession, setActiveSession] = useState(null);
-  const [sessionNote, setSessionNote] = useState("");
-  const [workoutTab, setWorkoutTab] = useState("plans");
+  const [activeSession, setActiveSession] = useState(() => load(SK.session, null));
+  const [sessionNote, setSessionNote] = useState(() => load(SK.session, null)?.note || "");
+  const [workoutTab, setWorkoutTab] = useState(() => load(SK.session, null) ? "session" : "plans");
 
   const [inspo, setInspo] = useState(() => load(SK.inspo, []));
   const [newInspo, setNewInspo] = useState({name:"",quote:""});
   const [showAddInspo, setShowAddInspo] = useState(false);
-
   const [toast, setToast] = useState(null);
 
   useEffect(() => { save(SK.weight, weightLog); }, [weightLog]);
@@ -241,6 +240,12 @@ export default function App() {
   useEffect(() => { save(SK.workout, wLog); }, [wLog]);
   useEffect(() => { save(SK.inspo, inspo); }, [inspo]);
   useEffect(() => { save(SK.mealdb, mealDb); }, [mealDb]);
+
+  // Session live in localStorage speichern
+  useEffect(() => {
+    if (activeSession) save(SK.session, {...activeSession, note: sessionNote});
+    else del(SK.session);
+  }, [activeSession, sessionNote]);
 
   function showToast(msg) { setToast(msg); setTimeout(()=>setToast(null),2400); }
 
@@ -277,12 +282,21 @@ export default function App() {
   function startWorkout(w) {
     const sets={};
     w.exIds.forEach(id=>{ sets[id]=[{reps:"",weight:"",done:false}]; });
-    setActiveSession({workoutId:w.id,sets,startTs:new Date().toISOString()});
+    const session = {workoutId:w.id, sets, startTs:new Date().toISOString(), note:""};
+    setActiveSession(session);
     setSessionNote(""); setWorkoutTab("session");
   }
 
   function addSet(exId) {
     setActiveSession(prev=>({...prev, sets:{...prev.sets,[exId]:[...prev.sets[exId],{reps:"",weight:"",done:false}]}}));
+  }
+
+  function removeSet(exId, i) {
+    setActiveSession(prev=>{
+      const sets={...prev.sets};
+      sets[exId]=sets[exId].filter((_,j)=>j!==i);
+      return {...prev,sets};
+    });
   }
 
   function updateSet(exId,i,field,val) {
@@ -316,15 +330,10 @@ export default function App() {
   const totalGain = latestW&&firstW ? (latestW.weight-firstW.weight).toFixed(1) : null;
   const todayFood = foodLog[todayKey()]||[];
   const todayWorkout = wLog[todayKey()]||[];
-
-  // verlauf daten
   const streak = calcStreak(foodLog);
   const topMeals = getTopMeals(foodLog);
   const calDays = getCalendarDays(foodLog);
-  const verlaufDays = Object.keys(foodLog)
-    .filter(k=>(foodLog[k]||[]).length>0)
-    .sort((a,b)=>b.localeCompare(a))
-    .slice(0,30);
+  const verlaufDays = Object.keys(foodLog).filter(k=>(foodLog[k]||[]).length>0).sort((a,b)=>b.localeCompare(a)).slice(0,30);
   const totalLoggedDays = Object.keys(foodLog).filter(k=>(foodLog[k]||[]).length>0).length;
 
   const chartW=320, chartH=100, padL=36, padR=12, padT=12, padB=28;
@@ -336,12 +345,14 @@ export default function App() {
   const pts=sortedW.map((e,i)=>`${toX(i)},${toY(e.weight)}`).join(" ");
 
   const NAV = [
-    {id:"home",   label:"Home",    icon:"🌸"},
-    {id:"essen",  label:"Essen",   icon:"🍑"},
-    {id:"workout",label:"Workout", icon:"💪"},
-    {id:"gewicht",label:"Gewicht", icon:"📈"},
-    {id:"inspo",  label:"Inspo",   icon:"✨"},
+    {id:"home", label:"Home", icon:"🌸"},
+    {id:"essen", label:"Essen", icon:"🍑"},
+    {id:"workout", label:"Workout", icon:"💪"},
+    {id:"gewicht", label:"Gewicht", icon:"📈"},
+    {id:"inspo", label:"Inspo", icon:"✨"},
   ];
+
+  const currentWorkout = activeSession ? WORKOUTS.find(w=>w.id===activeSession.workoutId) : null;
 
   return (
     <div style={{ minHeight:"100vh", background:C.bg, color:C.text,
@@ -352,21 +363,14 @@ export default function App() {
         <div style={{ position:"fixed", top:20, left:"50%", transform:"translateX(-50%)",
           background:"#fff", border:`1.5px solid ${C.border}`, borderRadius:12,
           padding:"10px 20px", fontSize:13, color:C.text, zIndex:999,
-          boxShadow:"0 8px 32px #e8829a22", whiteSpace:"nowrap",
-          fontFamily:"'DM Sans',sans-serif" }}>
+          boxShadow:"0 8px 32px #e8829a22", whiteSpace:"nowrap", fontFamily:"'DM Sans',sans-serif" }}>
           {toast}
         </div>
       )}
 
-      <div style={{ background:C.cream, borderBottom:`1.5px solid ${C.border}`,
-        padding:"20px 18px 16px", textAlign:"center" }}>
-        <div style={{ fontFamily:"'Fraunces',serif", fontSize:26, color:C.accent,
-          fontStyle:"italic", letterSpacing:"-0.02em", lineHeight:1 }}>
-          Gainz
-        </div>
-        <div style={{ fontSize:11, color:C.muted, marginTop:3, letterSpacing:"0.08em" }}>
-          dein persönlicher begleiter 🌸
-        </div>
+      <div style={{ background:C.cream, borderBottom:`1.5px solid ${C.border}`, padding:"20px 18px 16px", textAlign:"center" }}>
+        <div style={{ fontFamily:"'Fraunces',serif", fontSize:26, color:C.accent, fontStyle:"italic", letterSpacing:"-0.02em", lineHeight:1 }}>Gainz</div>
+        <div style={{ fontSize:11, color:C.muted, marginTop:3, letterSpacing:"0.08em" }}>dein persönlicher begleiter 🌸</div>
       </div>
 
       <div style={{ maxWidth:440, margin:"0 auto", padding:"16px 14px" }}>
@@ -380,8 +384,7 @@ export default function App() {
                 { label:"Heute gegessen", value: `${todayFood.length}`, sub:"Mahlzeiten", color:C.peach },
                 { label:"Trainings", value: `${Object.keys(wLog).length}`, sub:"Tage", color:C.sage },
               ].map(s=>(
-                <div key={s.label} style={{ background:C.card, border:`1.5px solid ${C.border}`,
-                  borderRadius:14, padding:"12px 10px", textAlign:"center", boxShadow:"0 2px 8px #e8829a06" }}>
+                <div key={s.label} style={{ background:C.card, border:`1.5px solid ${C.border}`, borderRadius:14, padding:"12px 10px", textAlign:"center", boxShadow:"0 2px 8px #e8829a06" }}>
                   <div style={{ fontFamily:"'Fraunces',serif", fontSize:20, color:s.color, fontWeight:600 }}>{s.value}</div>
                   <div style={{ fontSize:9, color:C.muted, marginTop:2, letterSpacing:"0.1em", textTransform:"uppercase" }}>{s.label}</div>
                   <div style={{ fontSize:10, color:C.sub, marginTop:1 }}>{s.sub}</div>
@@ -389,7 +392,23 @@ export default function App() {
               ))}
             </div>
 
-            {/* Streak */}
+            {activeSession && (
+              <Card style={{background:"linear-gradient(135deg,#fff5f0,#fdf0f5)",border:`1.5px solid ${C.peach}44`,marginBottom:10}}>
+                <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                  <div style={{display:"flex",alignItems:"center",gap:10}}>
+                    <div style={{fontSize:24}}>⏱️</div>
+                    <div>
+                      <div style={{fontFamily:"'Fraunces',serif",fontSize:14,color:C.peach}}>Session läuft noch!</div>
+                      <div style={{fontSize:11,color:C.sub,marginTop:2}}>{currentWorkout?.name}</div>
+                    </div>
+                  </div>
+                  <Btn onClick={()=>{setPage("workout");setWorkoutTab("session");}} variant="soft" style={{padding:"6px 12px",fontSize:11,background:C.peachDim,color:C.peach,border:`1.5px solid ${C.peach}44`}}>
+                    Weiter →
+                  </Btn>
+                </div>
+              </Card>
+            )}
+
             {streak > 0 && (
               <Card style={{background:"linear-gradient(135deg,#fff5f0,#fdf0f5)",border:`1.5px solid ${C.peach}33`,marginBottom:10}}>
                 <div style={{display:"flex",alignItems:"center",gap:12}}>
@@ -445,14 +464,12 @@ export default function App() {
         {/* ── ESSEN ── */}
         {page==="essen" && (
           <>
-            {/* Sub-tabs */}
             <div style={{display:"flex",gap:6,marginBottom:16,overflowX:"auto",paddingBottom:2}}>
               {[["loggen","Loggen"],["verlauf","Verlauf"],["stats","Stats"]].map(([k,l])=>(
                 <Pill key={k} active={essenTab===k} onClick={()=>setEssenTab(k)}>{l}</Pill>
               ))}
             </div>
 
-            {/* ── LOGGEN ── */}
             {essenTab==="loggen" && (
               <>
                 <SectionLabel>Was hast du gegessen?</SectionLabel>
@@ -463,7 +480,6 @@ export default function App() {
                     </Pill>
                   ))}
                 </div>
-
                 <div style={{display:"flex",flexDirection:"column",gap:7,marginBottom:14}}>
                   {mealDb.filter(m=>m.cat===pickCat).map(meal=>{
                     const sel=pickMeal?.id===meal.id;
@@ -486,12 +502,9 @@ export default function App() {
                     );
                   })}
                 </div>
-
                 {pickMeal&&(
                   <Card style={{border:`1.5px solid ${C.accent}33`,background:"#fff8fa"}}>
-                    <div style={{fontSize:13,fontWeight:500,color:C.accent,marginBottom:10}}>
-                      {pickMeal.icon} {pickMeal.name}
-                    </div>
+                    <div style={{fontSize:13,fontWeight:500,color:C.accent,marginBottom:10}}>{pickMeal.icon} {pickMeal.name}</div>
                     <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:8}}>
                       <div>
                         <div style={{fontSize:10,color:C.muted,marginBottom:4,letterSpacing:"0.08em"}}>UHRZEIT</div>
@@ -508,14 +521,11 @@ export default function App() {
                     <Btn onClick={logMeal} style={{width:"100%"}}>Einloggen 🌸</Btn>
                   </Card>
                 )}
-
                 {todayFood.length>0&&(
                   <>
                     <SectionLabel style={{marginTop:8}}>Heute geloggt</SectionLabel>
                     {[...todayFood].reverse().map(e=>(
-                      <div key={e.id} style={{display:"flex",gap:10,alignItems:"center",
-                        background:C.card,border:`1.5px solid ${C.sageDim}`,borderRadius:12,
-                        padding:"10px 12px",marginBottom:7}}>
+                      <div key={e.id} style={{display:"flex",gap:10,alignItems:"center",background:C.card,border:`1.5px solid ${C.sageDim}`,borderRadius:12,padding:"10px 12px",marginBottom:7}}>
                         <span style={{fontSize:18}}>{e.mealIcon}</span>
                         <div style={{flex:1}}>
                           <div style={{fontSize:12,fontWeight:500,color:C.sage}}>{e.mealName}</div>
@@ -528,11 +538,8 @@ export default function App() {
                     ))}
                   </>
                 )}
-
                 <div style={{marginTop:8}}>
-                  <Btn onClick={()=>setShowAddMeal(v=>!v)} variant="ghost" style={{width:"100%",marginBottom:8}}>
-                    + eigene Mahlzeit hinzufügen
-                  </Btn>
+                  <Btn onClick={()=>setShowAddMeal(v=>!v)} variant="ghost" style={{width:"100%",marginBottom:8}}>+ eigene Mahlzeit hinzufügen</Btn>
                   {showAddMeal&&(
                     <Card style={{border:`1.5px solid ${C.peach}44`}}>
                       <div style={{display:"grid",gridTemplateColumns:"50px 1fr",gap:8,marginBottom:8}}>
@@ -540,12 +547,9 @@ export default function App() {
                         <Inp placeholder="Name" value={newMeal.name} onChange={e=>setNewMeal(p=>({...p,name:e.target.value}))}/>
                       </div>
                       <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:8}}>
-                        {MEAL_CATS.map(cat=>(
-                          <Pill key={cat} active={newMeal.cat===cat} color={C.peach} onClick={()=>setNewMeal(p=>({...p,cat}))}>{cat}</Pill>
-                        ))}
+                        {MEAL_CATS.map(cat=>(<Pill key={cat} active={newMeal.cat===cat} color={C.peach} onClick={()=>setNewMeal(p=>({...p,cat}))}>{cat}</Pill>))}
                       </div>
-                      <Inp placeholder="Zutaten (optional)" value={newMeal.detail}
-                        onChange={e=>setNewMeal(p=>({...p,detail:e.target.value}))} style={{marginBottom:8}}/>
+                      <Inp placeholder="Zutaten (optional)" value={newMeal.detail} onChange={e=>setNewMeal(p=>({...p,detail:e.target.value}))} style={{marginBottom:8}}/>
                       <Btn onClick={addMealToDb} style={{width:"100%",background:C.peach}}>Speichern</Btn>
                     </Card>
                   )}
@@ -553,43 +557,28 @@ export default function App() {
               </>
             )}
 
-            {/* ── VERLAUF ── */}
             {essenTab==="verlauf" && (
               <>
-                {/* Kalender */}
                 <Card>
-                  <div style={{fontFamily:"'Fraunces',serif",fontSize:13,color:C.text,marginBottom:12}}>
-                    Letzte 4 Wochen
-                  </div>
+                  <div style={{fontFamily:"'Fraunces',serif",fontSize:13,color:C.text,marginBottom:12}}>Letzte 4 Wochen</div>
                   <div style={{display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:4}}>
-                    {["Mo","Di","Mi","Do","Fr","Sa","So"].map(d=>(
-                      <div key={d} style={{fontSize:8,color:C.muted,textAlign:"center",marginBottom:2}}>{d}</div>
-                    ))}
+                    {["Mo","Di","Mi","Do","Fr","Sa","So"].map(d=>(<div key={d} style={{fontSize:8,color:C.muted,textAlign:"center",marginBottom:2}}>{d}</div>))}
                     {calDays.map(d=>(
                       <div key={d.key} title={fmtDateShort(d.key)} style={{
                         aspectRatio:"1", borderRadius:6,
                         background: d.count>0 ? C.accent : C.warm,
                         border: d.isToday ? `2px solid ${C.accent}` : `1px solid ${C.border}`,
                         opacity: d.count>0 ? 1 : 0.5,
-                        cursor:"default",
                       }}/>
                     ))}
                   </div>
                   <div style={{display:"flex",alignItems:"center",gap:8,marginTop:10}}>
-                    <div style={{width:10,height:10,borderRadius:3,background:C.accent}}/>
-                    <span style={{fontSize:10,color:C.muted}}>geloggt</span>
-                    <div style={{width:10,height:10,borderRadius:3,background:C.warm,border:`1px solid ${C.border}`}}/>
-                    <span style={{fontSize:10,color:C.muted}}>nicht geloggt</span>
+                    <div style={{width:10,height:10,borderRadius:3,background:C.accent}}/><span style={{fontSize:10,color:C.muted}}>geloggt</span>
+                    <div style={{width:10,height:10,borderRadius:3,background:C.warm,border:`1px solid ${C.border}`}}/><span style={{fontSize:10,color:C.muted}}>nicht geloggt</span>
                   </div>
                 </Card>
-
-                {/* Tages-Verlauf */}
                 <SectionLabel>Tage im Detail</SectionLabel>
-                {verlaufDays.length===0 && (
-                  <div style={{textAlign:"center",color:C.muted,padding:"30px 0",fontSize:13}}>
-                    Noch nichts geloggt 🌸
-                  </div>
-                )}
+                {verlaufDays.length===0 && <div style={{textAlign:"center",color:C.muted,padding:"30px 0",fontSize:13}}>Noch nichts geloggt 🌸</div>}
                 {verlaufDays.map(dateKey => {
                   const entries = foodLog[dateKey]||[];
                   const isToday = dateKey===todayKey();
@@ -597,41 +586,31 @@ export default function App() {
                   return (
                     <div key={dateKey} style={{marginBottom:8}}>
                       <button onClick={()=>setExpandedDay(isExpanded?null:dateKey)} style={{
-                        width:"100%", background:C.card,
-                        border:`1.5px solid ${isToday?C.accent+"44":C.border}`,
+                        width:"100%", background:C.card, border:`1.5px solid ${isToday?C.accent+"44":C.border}`,
                         borderRadius:12, padding:"12px 14px", cursor:"pointer",
                         textAlign:"left", display:"flex", justifyContent:"space-between", alignItems:"center",
                       }}>
                         <div>
-                          <div style={{fontFamily:"'Fraunces',serif",fontSize:13,
-                            color:isToday?C.accent:C.text}}>
+                          <div style={{fontFamily:"'Fraunces',serif",fontSize:13,color:isToday?C.accent:C.text}}>
                             {isToday?"Heute":fmtDate(dateKey)}
                           </div>
                           <div style={{fontSize:11,color:C.muted,marginTop:2}}>
-                            {entries.length} Mahlzeit{entries.length!==1?"en":""}
-                            {" · "}{entries.map(e=>e.mealIcon).join(" ")}
+                            {entries.length} Mahlzeit{entries.length!==1?"en":""}{" · "}{entries.map(e=>e.mealIcon).join(" ")}
                           </div>
                         </div>
                         <span style={{fontSize:14,color:C.muted}}>{isExpanded?"▲":"▼"}</span>
                       </button>
                       {isExpanded && (
-                        <div style={{background:C.warm,borderRadius:"0 0 12px 12px",
-                          border:`1.5px solid ${C.border}`,borderTop:"none",
-                          padding:"8px 14px 12px"}}>
+                        <div style={{background:C.warm,borderRadius:"0 0 12px 12px",border:`1.5px solid ${C.border}`,borderTop:"none",padding:"8px 14px 12px"}}>
                           {entries.map(e=>(
-                            <div key={e.id} style={{display:"flex",gap:10,alignItems:"flex-start",
-                              padding:"8px 0",borderBottom:`1px solid ${C.border}44`}}>
+                            <div key={e.id} style={{display:"flex",gap:10,alignItems:"flex-start",padding:"8px 0",borderBottom:`1px solid ${C.border}44`}}>
                               <span style={{fontSize:18,flexShrink:0}}>{e.mealIcon}</span>
                               <div style={{flex:1}}>
                                 <div style={{fontSize:12,fontWeight:500,color:C.text}}>{e.mealName}</div>
                                 {e.note&&<div style={{fontSize:11,color:C.sub,marginTop:1}}>📝 {e.note}</div>}
                                 <div style={{fontSize:10,color:C.muted,marginTop:1}}>{fmtTime(e.ts)}</div>
                               </div>
-                              <div style={{fontSize:10,color:C.muted,
-                                background:C.card,borderRadius:6,padding:"2px 6px",
-                                border:`1px solid ${C.border}`,flexShrink:0}}>
-                                {e.cat}
-                              </div>
+                              <div style={{fontSize:10,color:C.muted,background:C.card,borderRadius:6,padding:"2px 6px",border:`1px solid ${C.border}`,flexShrink:0}}>{e.cat}</div>
                             </div>
                           ))}
                         </div>
@@ -642,10 +621,8 @@ export default function App() {
               </>
             )}
 
-            {/* ── STATS ── */}
             {essenTab==="stats" && (
               <>
-                {/* Streak + gesamt */}
                 <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:14}}>
                   <Card style={{textAlign:"center",marginBottom:0}}>
                     <div style={{fontSize:28}}>🔥</div>
@@ -658,18 +635,10 @@ export default function App() {
                     <div style={{fontSize:10,color:C.muted,letterSpacing:"0.1em"}}>TAGE GELOGGT</div>
                   </Card>
                 </div>
-
-                {/* Top Mahlzeiten */}
                 <Card>
-                  <div style={{fontFamily:"'Fraunces',serif",fontSize:14,color:C.text,marginBottom:12}}>
-                    🏆 Deine Lieblingsmahlzeiten
-                  </div>
-                  {topMeals.length===0 && (
-                    <div style={{fontSize:12,color:C.muted,textAlign:"center",padding:"10px 0"}}>
-                      Noch keine Daten 🌸
-                    </div>
-                  )}
-                  {topMeals.map(([name, count], i)=>{
+                  <div style={{fontFamily:"'Fraunces',serif",fontSize:14,color:C.text,marginBottom:12}}>🏆 Deine Lieblingsmahlzeiten</div>
+                  {topMeals.length===0 && <div style={{fontSize:12,color:C.muted,textAlign:"center",padding:"10px 0"}}>Noch keine Daten 🌸</div>}
+                  {topMeals.map(([name, count])=>{
                     const meal = mealDb.find(m=>m.name===name);
                     const maxCount = topMeals[0]?.[1]||1;
                     return (
@@ -682,20 +651,14 @@ export default function App() {
                           <span style={{fontSize:11,color:C.muted}}>{count}×</span>
                         </div>
                         <div style={{height:5,background:C.warm,borderRadius:4,overflow:"hidden"}}>
-                          <div style={{height:"100%",width:`${(count/maxCount)*100}%`,
-                            background:`linear-gradient(90deg,${C.accent},${C.peach})`,
-                            borderRadius:4,transition:"width 0.4s ease"}}/>
+                          <div style={{height:"100%",width:`${(count/maxCount)*100}%`,background:`linear-gradient(90deg,${C.accent},${C.peach})`,borderRadius:4}}/>
                         </div>
                       </div>
                     );
                   })}
                 </Card>
-
-                {/* Mahlzeiten pro Kategorie */}
                 <Card>
-                  <div style={{fontFamily:"'Fraunces',serif",fontSize:14,color:C.text,marginBottom:12}}>
-                    📊 Nach Kategorie
-                  </div>
+                  <div style={{fontFamily:"'Fraunces',serif",fontSize:14,color:C.text,marginBottom:12}}>📊 Nach Kategorie</div>
                   {MEAL_CATS.map(cat=>{
                     const count = Object.values(foodLog).flat().filter(e=>e.cat===cat).length;
                     const total = Object.values(foodLog).flat().length||1;
@@ -708,8 +671,7 @@ export default function App() {
                             <span style={{fontSize:11,color:C.muted}}>{count}×</span>
                           </div>
                           <div style={{height:5,background:C.warm,borderRadius:4,overflow:"hidden"}}>
-                            <div style={{height:"100%",width:`${(count/total)*100}%`,
-                              background:C.sage,borderRadius:4}}/>
+                            <div style={{height:"100%",width:`${(count/total)*100}%`,background:C.sage,borderRadius:4}}/>
                           </div>
                         </div>
                       </div>
@@ -730,7 +692,7 @@ export default function App() {
               ))}
             </div>
 
-            {workoutTab==="plans"&&(
+            {workoutTab==="plans" && (
               <>
                 <SectionLabel>Deine Split-Pläne</SectionLabel>
                 {WORKOUTS.map(w=>{
@@ -759,23 +721,19 @@ export default function App() {
               </>
             )}
 
-            {workoutTab==="session"&&(
+            {workoutTab==="session" && (
               <>
                 {!activeSession
-                  ?<div style={{textAlign:"center",color:C.muted,padding:"40px 0",fontSize:13}}>
-                    Kein aktives Training — starte einen Plan! 💪
-                  </div>
-                  :<>
+                  ? <div style={{textAlign:"center",color:C.muted,padding:"40px 0",fontSize:13}}>Kein aktives Training — starte einen Plan! 💪</div>
+                  : <>
                     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
-                      <div style={{fontFamily:"'Fraunces',serif",fontSize:16,color:C.accent}}>
-                        {WORKOUTS.find(w=>w.id===activeSession.workoutId)?.name}
-                      </div>
+                      <div style={{fontFamily:"'Fraunces',serif",fontSize:16,color:C.accent}}>{currentWorkout?.name}</div>
                       <div style={{fontSize:10,color:C.peach,letterSpacing:"0.1em"}}>● LÄUFT</div>
                     </div>
-                    {WORKOUTS.find(w=>w.id===activeSession.workoutId)?.exIds.map(exId=>{
+                    {currentWorkout?.exIds.map(exId=>{
                       const ex=EXERCISES.find(e=>e.id===exId); if(!ex) return null;
                       const sets=activeSession.sets[exId]||[];
-                      const allDone=sets.every(s=>s.done);
+                      const allDone=sets.length>0&&sets.every(s=>s.done);
                       return (
                         <Card key={exId} style={allDone?{border:`1.5px solid ${C.sage}55`,background:C.sageDim}:{}}>
                           <div style={{display:"flex",justifyContent:"space-between",marginBottom:10}}>
@@ -784,25 +742,30 @@ export default function App() {
                               <div style={{fontSize:10,color:C.muted,marginTop:2}}>{ex.tip}</div>
                             </div>
                           </div>
-                          <div style={{display:"grid",gridTemplateColumns:"22px 1fr 1fr 36px",gap:6,alignItems:"center",marginBottom:8}}>
+                          <div style={{display:"grid",gridTemplateColumns:"22px 1fr 1fr 36px 28px",gap:5,alignItems:"center",marginBottom:8}}>
                             <div style={{fontSize:9,color:C.muted}}>#</div>
                             <div style={{fontSize:9,color:C.muted,letterSpacing:"0.08em"}}>KG</div>
                             <div style={{fontSize:9,color:C.muted,letterSpacing:"0.08em"}}>WDHL</div>
-                            <div/>
+                            <div/><div/>
                             {sets.map((s,i)=>(
                               <>
                                 <div key={"n"+i} style={{fontSize:11,color:C.muted,textAlign:"center"}}>{i+1}</div>
                                 <input key={"w"+i} type="number" placeholder="—" value={s.weight}
                                   onChange={e=>updateSet(exId,i,"weight",e.target.value)}
                                   style={{background:C.warm,border:`1.5px solid ${C.border}`,borderRadius:8,
-                                    padding:"7px 8px",color:C.text,fontFamily:"inherit",fontSize:12,
+                                    padding:"7px 6px",color:C.text,fontFamily:"inherit",fontSize:12,
                                     outline:"none",textAlign:"center",width:"100%",boxSizing:"border-box"}}/>
                                 <input key={"r"+i} type="number" placeholder="—" value={s.reps}
                                   onChange={e=>updateSet(exId,i,"reps",e.target.value)}
                                   style={{background:C.warm,border:`1.5px solid ${C.border}`,borderRadius:8,
-                                    padding:"7px 8px",color:C.text,fontFamily:"inherit",fontSize:12,
+                                    padding:"7px 6px",color:C.text,fontFamily:"inherit",fontSize:12,
                                     outline:"none",textAlign:"center",width:"100%",boxSizing:"border-box"}}/>
                                 <CheckBtn key={"c"+i} done={s.done} onClick={()=>toggleSet(exId,i)} color={C.sage}/>
+                                <button key={"del"+i} onClick={()=>removeSet(exId,i)} style={{
+                                  background:"none",border:"none",cursor:"pointer",
+                                  color:C.muted,fontSize:16,padding:"2px",lineHeight:1,
+                                  display:"flex",alignItems:"center",justifyContent:"center",
+                                }}>×</button>
                               </>
                             ))}
                           </div>
@@ -817,18 +780,14 @@ export default function App() {
                     })}
                     <Inp placeholder="Notiz zum Training (optional)" value={sessionNote}
                       onChange={e=>setSessionNote(e.target.value)} style={{marginBottom:10,marginTop:4}}/>
-                    <Btn onClick={finishWorkout} style={{width:"100%",background:C.sage,marginBottom:8}}>
-                      Training abschließen ✓
-                    </Btn>
-                    <Btn onClick={()=>{setActiveSession(null);setWorkoutTab("plans");}} variant="ghost" style={{width:"100%"}}>
-                      Abbrechen
-                    </Btn>
+                    <Btn onClick={finishWorkout} style={{width:"100%",background:C.sage,marginBottom:8}}>Training abschließen ✓</Btn>
+                    <Btn onClick={()=>{setActiveSession(null);setWorkoutTab("plans");}} variant="ghost" style={{width:"100%"}}>Abbrechen</Btn>
                   </>
                 }
               </>
             )}
 
-            {workoutTab==="verlauf"&&(
+            {workoutTab==="verlauf" && (
               <>
                 <SectionLabel>Trainings-Verlauf</SectionLabel>
                 {Object.keys(wLog).filter(k=>wLog[k]?.length>0).sort((a,b)=>b.localeCompare(a)).slice(0,14).map(dateKey=>{
@@ -853,8 +812,7 @@ export default function App() {
                     </div>
                   );
                 })}
-                {Object.keys(wLog).length===0&&
-                  <div style={{textAlign:"center",color:C.muted,padding:"40px 0",fontSize:13}}>Noch kein Training — leg los! 💪</div>}
+                {Object.keys(wLog).length===0&&<div style={{textAlign:"center",color:C.muted,padding:"40px 0",fontSize:13}}>Noch kein Training — leg los! 💪</div>}
               </>
             )}
           </>
@@ -875,53 +833,32 @@ export default function App() {
                 </div>
               ))}
             </div>
-
             <Card>
               <div style={{fontSize:11,color:C.muted,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:10,fontFamily:"'Fraunces',serif"}}>Heute eintragen</div>
               <div style={{display:"flex",gap:8}}>
-                <Inp type="number" placeholder="kg" value={wInput}
-                  onChange={e=>setWInput(e.target.value)}
-                  style={{fontSize:18,fontFamily:"'Fraunces',serif",fontWeight:400}}/>
+                <Inp type="number" placeholder="kg" value={wInput} onChange={e=>setWInput(e.target.value)} style={{fontSize:18,fontFamily:"'Fraunces',serif",fontWeight:400}}/>
                 <Btn onClick={addWeight} style={{flexShrink:0,padding:"9px 18px"}}>Speichern</Btn>
               </div>
             </Card>
-
             {sortedW.length>1&&(
               <Card>
                 <div style={{fontSize:11,color:C.muted,letterSpacing:"0.1em",textTransform:"uppercase",marginBottom:10,fontFamily:"'Fraunces',serif"}}>Verlauf</div>
                 <svg width={chartW} height={chartH} style={{display:"block",margin:"0 auto",overflow:"visible"}}>
-                  {[0,0.5,1].map(t=>{
-                    const y=padT+iH*(1-t);
-                    return <line key={t} x1={padL} y1={y} x2={padL+iW} y2={y} stroke={C.border} strokeWidth={1}/>;
-                  })}
-                  <defs>
-                    <linearGradient id="wgrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor={C.accent} stopOpacity="0.15"/>
-                      <stop offset="100%" stopColor={C.accent} stopOpacity="0"/>
-                    </linearGradient>
-                  </defs>
-                  {sortedW.length>1&&(
-                    <polygon points={`${toX(0)},${padT+iH} ${pts} ${toX(sortedW.length-1)},${padT+iH}`} fill="url(#wgrad)"/>
-                  )}
-                  {sortedW.length>1&&(
-                    <polyline points={pts} fill="none" stroke={C.accent} strokeWidth={2.5} strokeLinejoin="round" strokeLinecap="round"/>
-                  )}
-                  {sortedW.map((e,i)=>(
-                    <circle key={e.date} cx={toX(i)} cy={toY(e.weight)} r={4} fill={C.accent} stroke="#fff" strokeWidth={2}/>
-                  ))}
+                  {[0,0.5,1].map(t=>{ const y=padT+iH*(1-t); return <line key={t} x1={padL} y1={y} x2={padL+iW} y2={y} stroke={C.border} strokeWidth={1}/>; })}
+                  <defs><linearGradient id="wgrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor={C.accent} stopOpacity="0.15"/><stop offset="100%" stopColor={C.accent} stopOpacity="0"/></linearGradient></defs>
+                  <polygon points={`${toX(0)},${padT+iH} ${pts} ${toX(sortedW.length-1)},${padT+iH}`} fill="url(#wgrad)"/>
+                  <polyline points={pts} fill="none" stroke={C.accent} strokeWidth={2.5} strokeLinejoin="round" strokeLinecap="round"/>
+                  {sortedW.map((e,i)=>(<circle key={e.date} cx={toX(i)} cy={toY(e.weight)} r={4} fill={C.accent} stroke="#fff" strokeWidth={2}/>))}
                 </svg>
               </Card>
             )}
-
             <SectionLabel>Alle Einträge</SectionLabel>
             {sortedW.length===0&&<div style={{textAlign:"center",color:C.muted,padding:"20px 0",fontSize:13}}>Noch keine Einträge</div>}
             {[...sortedW].reverse().map(e=>(
-              <div key={e.date} style={{display:"flex",justifyContent:"space-between",alignItems:"center",
-                background:C.card,border:`1.5px solid ${C.border}`,borderRadius:12,padding:"11px 14px",marginBottom:7}}>
+              <div key={e.date} style={{display:"flex",justifyContent:"space-between",alignItems:"center",background:C.card,border:`1.5px solid ${C.border}`,borderRadius:12,padding:"11px 14px",marginBottom:7}}>
                 <div style={{fontSize:11,color:C.muted}}>{fmtDateShort(e.date)}</div>
                 <div style={{fontFamily:"'Fraunces',serif",fontSize:18,color:C.accent,fontWeight:600}}>{e.weight} kg</div>
-                <button onClick={()=>setWeightLog(prev=>prev.filter(x=>x.date!==e.date))}
-                  style={{background:"none",border:"none",cursor:"pointer",color:C.muted,fontSize:16,padding:4}}>×</button>
+                <button onClick={()=>setWeightLog(prev=>prev.filter(x=>x.date!==e.date))} style={{background:"none",border:"none",cursor:"pointer",color:C.muted,fontSize:16,padding:4}}>×</button>
               </div>
             ))}
           </>
@@ -932,15 +869,11 @@ export default function App() {
           <>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14}}>
               <SectionLabel>Deine Vorbilder</SectionLabel>
-              <Btn onClick={()=>setShowAddInspo(v=>!v)} variant="soft" style={{padding:"6px 14px",fontSize:11}}>
-                + hinzufügen
-              </Btn>
+              <Btn onClick={()=>setShowAddInspo(v=>!v)} variant="soft" style={{padding:"6px 14px",fontSize:11}}>+ hinzufügen</Btn>
             </div>
-
             {showAddInspo&&(
               <Card style={{border:`1.5px solid ${C.accent}44`,background:"#fff8fa",marginBottom:14}}>
-                <Inp placeholder="Name" value={newInspo.name}
-                  onChange={e=>setNewInspo(p=>({...p,name:e.target.value}))} style={{marginBottom:8}}/>
+                <Inp placeholder="Name" value={newInspo.name} onChange={e=>setNewInspo(p=>({...p,name:e.target.value}))} style={{marginBottom:8}}/>
                 <textarea value={newInspo.quote} onChange={e=>setNewInspo(p=>({...p,quote:e.target.value}))}
                   placeholder="Zitat oder was sie in dir auslöst…" rows={3}
                   style={{background:C.warm,border:`1.5px solid ${C.border}`,borderRadius:10,
@@ -953,28 +886,17 @@ export default function App() {
                 }} style={{width:"100%"}}>Speichern</Btn>
               </Card>
             )}
-
             {inspo.length===0&&!showAddInspo&&(
-              <div style={{textAlign:"center",color:C.muted,padding:"40px 0",fontSize:13,lineHeight:2}}>
-                Füge Vorbilder hinzu die dich antreiben ✨
-              </div>
+              <div style={{textAlign:"center",color:C.muted,padding:"40px 0",fontSize:13,lineHeight:2}}>Füge Vorbilder hinzu die dich antreiben ✨</div>
             )}
-
             {inspo.map(p=>(
-              <div key={p.id} style={{background:`linear-gradient(135deg,#fff5f8,#fdf0f8)`,
-                border:`1.5px solid ${C.accent}22`,borderRadius:16,padding:"18px 16px",marginBottom:10,
-                boxShadow:`0 4px 20px ${C.accent}0a`}}>
+              <div key={p.id} style={{background:`linear-gradient(135deg,#fff5f8,#fdf0f8)`,border:`1.5px solid ${C.accent}22`,borderRadius:16,padding:"18px 16px",marginBottom:10,boxShadow:`0 4px 20px ${C.accent}0a`}}>
                 <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
                   <div style={{flex:1}}>
                     <div style={{fontFamily:"'Fraunces',serif",fontSize:17,color:C.accent,fontStyle:"italic",marginBottom:8}}>✦ {p.name}</div>
-                    {p.quote&&(
-                      <div style={{fontSize:13,color:C.sub,lineHeight:1.7,borderLeft:`2px solid ${C.accent}44`,paddingLeft:12,fontStyle:"italic"}}>
-                        „{p.quote}"
-                      </div>
-                    )}
+                    {p.quote&&(<div style={{fontSize:13,color:C.sub,lineHeight:1.7,borderLeft:`2px solid ${C.accent}44`,paddingLeft:12,fontStyle:"italic"}}>„{p.quote}"</div>)}
                   </div>
-                  <button onClick={()=>setInspo(prev=>prev.filter(i=>i.id!==p.id))}
-                    style={{background:"none",border:"none",cursor:"pointer",color:C.muted,padding:4,fontSize:16}}>×</button>
+                  <button onClick={()=>setInspo(prev=>prev.filter(i=>i.id!==p.id))} style={{background:"none",border:"none",cursor:"pointer",color:C.muted,padding:4,fontSize:16}}>×</button>
                 </div>
               </div>
             ))}
@@ -982,8 +904,7 @@ export default function App() {
         )}
       </div>
 
-      <div style={{position:"fixed",bottom:0,left:0,right:0,background:C.cream,
-        borderTop:`1.5px solid ${C.border}`,display:"flex",boxShadow:"0 -4px 20px #e8829a0a"}}>
+      <div style={{position:"fixed",bottom:0,left:0,right:0,background:C.cream,borderTop:`1.5px solid ${C.border}`,display:"flex",boxShadow:"0 -4px 20px #e8829a0a"}}>
         {NAV.map(n=>(
           <button key={n.id} onClick={()=>setPage(n.id)} style={{
             flex:1,padding:"10px 4px 12px",background:"transparent",border:"none",
